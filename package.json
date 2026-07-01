@@ -1,0 +1,19 @@
+{
+  "name": "sosg-gitcard",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "把 GitHub 个人页变成 SOS団 团员档案的粉丝趣味项目",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && wrangler pages deploy"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10",
+    "wrangler": "^3.90.0"
+  }
+}

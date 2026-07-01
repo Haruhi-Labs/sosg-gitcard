@@ -1,0 +1,8 @@
+node_modules
+dist
+*.local
+.DS_Store
+# Cloudflare / wrangler
+.wrangler
+.dev.vars
+*.cfsecret

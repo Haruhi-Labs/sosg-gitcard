@@ -1,0 +1,5 @@
+# Cloudflare Pages 配置
+# 静态资源在 dist/，functions/ 目录会被自动编译为同源的 Pages Functions
+name = "harufan"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "dist"
