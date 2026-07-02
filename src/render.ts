@@ -4,6 +4,7 @@ import { diagnose, MEMBERS } from "./members";
 import { radarSVG } from "./radar";
 import { heatmapSVG } from "./heatmap";
 import { RateLimitError, NotFoundError } from "./github";
+import { saveDossierImage } from "./export";
 
 // ————————————————————————————————————————————————
 // 视图渲染层：所有界面都在这里生成
@@ -57,6 +58,30 @@ function bindSearch(root: HTMLElement, navigate: Navigate) {
     const input = form.querySelector<HTMLInputElement>(".search-input");
     const v = input?.value.trim().replace(/^@/, "").replace(/^.*github\.com\//, "").split(/[/?#]/)[0];
     if (v) navigate(v);
+  });
+}
+
+/** 绑定「保存为长图」按钮：把当前档案卡导出成 PNG 下载 */
+function bindSaveImage(root: HTMLElement, login: string) {
+  const btn = root.querySelector<HTMLButtonElement>(".save-img");
+  const dossier = root.querySelector<HTMLElement>(".dossier");
+  if (!btn || !dossier) return;
+  const label = btn.textContent ?? "保存为长图 ↓";
+  btn.addEventListener("click", async () => {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    btn.textContent = "生成中…";
+    try {
+      await saveDossierImage(dossier, login);
+      btn.textContent = "已保存 ✓";
+      setTimeout(() => {
+        btn.textContent = label;
+        btn.disabled = false;
+      }, 1600);
+    } catch {
+      btn.textContent = "生成失败，重试";
+      btn.disabled = false;
+    }
   });
 }
 
@@ -360,6 +385,7 @@ export function renderDossier(root: HTMLElement, snap: ProfileSnapshot, navigate
       </article>
 
       <div class="restage">
+        <button class="save-img" type="button">保存为长图 ↓</button>
         <span class="restage-hint">立案下一位团员：</span>
         ${searchForm("换个用户名")}
         <button class="link-back" type="button">← 立案窗口</button>
@@ -368,6 +394,7 @@ export function renderDossier(root: HTMLElement, snap: ProfileSnapshot, navigate
 
   bindSearch(root, navigate);
   root.querySelector(".link-back")?.addEventListener("click", () => navigate(""));
+  bindSaveImage(root, snap.user.login);
 
   // 头像加载失败兜底
   const img = root.querySelector<HTMLImageElement>(".portrait-img");

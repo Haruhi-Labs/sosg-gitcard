@@ -1061,6 +1061,43 @@ a {
   text-align: center;
 }
 
+.save-img {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 22px;
+  padding: 11px 22px;
+  border: 2px solid var(--ink);
+  background: var(--sos-red);
+  color: #fff;
+  font-family: var(--f-jp);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform 0.1s, box-shadow 0.1s, background 0.15s;
+}
+
+.save-img:hover:not(:disabled) {
+  background: var(--sos-red-deep);
+}
+
+.save-img:active:not(:disabled) {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.save-img:disabled {
+  cursor: default;
+  background: var(--ink-soft);
+}
+
+.save-img:focus-visible {
+  outline: 2px solid var(--sos-red);
+  outline-offset: 3px;
+}
+
 .restage-hint {
   display: block;
   font-family: var(--f-mono);
