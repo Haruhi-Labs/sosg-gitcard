@@ -56,13 +56,13 @@ export function radarSVG(ab: Abilities): string {
       </g>`;
   }).join("");
 
-  // 顶点数值
+  // 顶点数值：高分时顶点贴着外圈，数字若仍放外侧会撞上轴标签，故改放顶点内侧；
+  // 低/中分放外侧（既不挤向圆心、也远离标签）。
   const values = AXES.map((ax, i) => {
-    const [x, y] = point(i, ab[ax.key] / 100);
-    const [lx, ly] = point(i, ab[ax.key] / 100 + 0.14);
-    void x;
-    void y;
-    return `<text class="radar-value" x="${lx}" y="${ly}" text-anchor="middle">${ab[ax.key]}</text>`;
+    const t = ab[ax.key] / 100;
+    const rt = t >= 0.9 ? t - 0.16 : t + 0.15;
+    const [lx, ly] = point(i, rt);
+    return `<text class="radar-value" x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle">${ab[ax.key]}</text>`;
   }).join("");
 
   return `
