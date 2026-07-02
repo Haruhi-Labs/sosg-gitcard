@@ -48,7 +48,7 @@ export const MEMBERS: Record<MemberId, Member> = {
     accentSoft: "#C4E7D3",
     glyph: "協",
     quote: "全て、あなたの仰る通りです（微笑）。",
-    blurb: "八面玲珑的协调者。热衷协作与 fork，关注众人、被众人关注，永远微笑着配合。",
+    blurb: "八面玲珑的协调者。热衷协作，关注众人、被众人关注，优雅地应对各种事情。",
   },
   kyon: {
     id: "kyon",
