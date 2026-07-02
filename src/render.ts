@@ -5,6 +5,7 @@ import { radarSVG } from "./radar";
 import { heatmapSVG } from "./heatmap";
 import { RateLimitError, NotFoundError } from "./github";
 import { saveDossierImage } from "./export";
+import sosLogo from "./assets/sos-logo.png";
 
 // ————————————————————————————————————————————————
 // 视图渲染层：所有界面都在这里生成
@@ -294,7 +295,7 @@ export function renderDossier(root: HTMLElement, snap: ProfileSnapshot, navigate
         style="--accent:${member.accent};--accent-soft:${member.accentSoft}">
 
         <header class="band">
-          <div class="band-emblem">SOS<span>団</span></div>
+          <img class="band-emblem" src="${sosLogo}" alt="SOS団" />
           <div class="band-meta">
             <span class="band-file">団員ファイル</span>
             <span class="band-no">No.<b>${no}</b></span>
@@ -362,7 +363,7 @@ export function renderDossier(root: HTMLElement, snap: ProfileSnapshot, navigate
 
         <footer class="foot">
           <span class="foot-text">本档案由 SOS団 依据 GitHub 公开数据自动签发 · 仅供娱乐</span>
-          <span class="foot-seal">団</span>
+          <img class="foot-seal" src="${sosLogo}" alt="SOS団" />
         </footer>
       </article>
 
