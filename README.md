@@ -4,7 +4,7 @@
 
 **在线体验：[harufan.com/torvalds](https://harufan.com/torvalds)** （把 `torvalds` 换成任意 GitHub 用户名）
 
-![预览](docs/preview.png)
+![预览](docs/preview.webp)
 
 数据实时取自 GitHub 公开接口，仅供娱乐。
 
