@@ -238,30 +238,16 @@ export function renderDossier(root: HTMLElement, snap: ProfileSnapshot, navigate
     </section>`
     : "";
 
-  // 協力実績：跨仓库的社区贡献。三路并列——发起的 PR、合并进他人仓库的 PR、
-  // 直推他人仓库的推送。各字段可能因限流/接口缺失而为 null，缺则显示占位。
+  // 協力実績：跨仓库的社区贡献——发起的 PR 总数、以及被合并进他人仓库的 PR 数。
+  // 字段可能因搜索限流而缺失，缺则显示占位。
   const pr = m.contrib?.totalPRs ?? null;
   const ext = m.contrib?.externalMergedPRs ?? null;
-  const push = snap.externalPush;
-  const pushes = push?.pushes ?? 0;
-
-  // 说明文案：把「合并进他人 PR」与「直推他人仓库」拼成一句
-  const parts: string[] = [];
-  if (pr !== null && pr > 0) {
-    const merged = ext !== null && ext > 0 ? `，其中 ${fmtExact(ext)} 个合并进他人仓库` : "";
-    parts.push(`累计发起 ${fmtExact(pr)} 个 PR${merged}`);
-  } else if (ext !== null && ext > 0) {
-    parts.push(`有 ${fmtExact(ext)} 个 PR 合并进他人仓库`);
-  }
-  if (pushes > 0) {
-    parts.push(`近期直接向他人的 ${push!.repos} 个仓库推送了 ${fmtExact(pushes)} 次`);
-  }
-
   let contribNote: string;
-  if (pr === null && ext === null && push === null) {
+  if (pr === null && ext === null) {
     contribNote = "情报接口繁忙，暂时调取不到协力记录，稍后刷新再试。";
-  } else if ((ext !== null && ext > 0) || pushes > 0) {
-    contribNote = `积极投身开源社区——${parts.join("；")}。`;
+  } else if (ext !== null && ext > 0) {
+    const prTxt = pr !== null ? `${fmtExact(pr)} 个 PR` : "若干 PR";
+    contribNote = `积极投身开源社区——累计发起 ${prTxt}，其中 ${fmtExact(ext)} 个合并进他人仓库。`;
   } else if (pr !== null && pr > 0) {
     contribNote = `目前主要深耕自己的项目，累计发起 ${fmtExact(pr)} 个 PR。`;
   } else {
@@ -279,10 +265,6 @@ export function renderDossier(root: HTMLElement, snap: ProfileSnapshot, navigate
         <div class="contrib-cell hl">
           <span class="contrib-num">${ext !== null ? fmtExact(ext) : "—"}</span>
           <span class="contrib-label">合并进他人<i>MERGED PR</i></span>
-        </div>
-        <div class="contrib-cell">
-          <span class="contrib-num">${push ? fmtExact(push.pushes) : "—"}</span>
-          <span class="contrib-label">直推他人<i>DIRECT PUSH</i></span>
         </div>
       </div>
       <p class="contrib-note">${contribNote}</p>

@@ -1,25 +1,19 @@
-import type {
-  GitHubUser,
-  GitHubRepo,
-  ProfileSnapshot,
-  ContribStats,
-  ExternalPushStats,
-} from "./types";
+import type { GitHubUser, GitHubRepo, ProfileSnapshot, ContribStats } from "./types";
 import type { Contributions } from "./contrib";
 
 // ————————————————————————————————————————————————
 // GitHub API 客户端
 // 全部在浏览器端直连 api.github.com，服务器零负载。
 // 未登录额度为每 IP 60 次/小时，因此：
-//   1. 每份档案只发 3 个核心请求（user + repos 单页 100 条 + events 单页 100 条），
+//   1. 每份档案只发 2 个核心请求（user + repos 单页 100 条），
 //      另有 2 次 Search（独立额度）与 1 次同源贡献代理（不占核心额度）
 //   2. localStorage 缓存 30 分钟，命中即不发请求
 //   3. 触发限流时优先回退到过期缓存，再不行才友好报错
 // ————————————————————————————————————————————————
 
 const API = "https://api.github.com";
-// v7：移除语言统计、新增直推他人仓库统计，升版以让旧缓存自然失效
-const CACHE_PREFIX = "sos-profile-v7:";
+// v8：移除直推他人仓库统计，升版以让旧缓存自然失效
+const CACHE_PREFIX = "sos-profile-v8:";
 const CACHE_TTL = 30 * 60 * 1000; // 30 分钟
 
 /** 限流错误：携带额度重置时间，供 UI 提示 */
@@ -120,32 +114,6 @@ export async function fetchContrib(login: string): Promise<ContribStats | null> 
 }
 
 /**
- * 拉取「直推他人仓库」统计。用 Events API 数用户近期 PushEvent 里
- * 推向「非自己名下」仓库的次数与去重仓库数——捕捉有写权限、直接 push
- * 进他人项目、不走 PR 的贡献（PR 统计漏掉的那部分）。
- * Events 是用户真实动作、无跨 fork 污染，且支持浏览器跨域；仅覆盖近期（约
- * 90 天 / 最近 100 条事件）。失败时返回 null，不影响档案展示。
- */
-export async function fetchExternalPushes(login: string): Promise<ExternalPushStats | null> {
-  try {
-    const res = await fetch(
-      `${API}/users/${encodeURIComponent(login)}/events/public?per_page=100`,
-      { headers: { Accept: "application/vnd.github+json" } },
-    );
-    if (!res.ok) return null;
-    const events = (await res.json()) as Array<{ type: string; repo?: { name: string } }>;
-    const prefix = login.toLowerCase() + "/";
-    const external = events.filter(
-      (e) => e.type === "PushEvent" && e.repo?.name && !e.repo.name.toLowerCase().startsWith(prefix),
-    );
-    const repos = new Set(external.map((e) => e.repo!.name));
-    return { pushes: external.length, repos: repos.size };
-  } catch {
-    return null;
-  }
-}
-
-/**
  * 拉取近一年贡献日历。走同源代理 /api/contributions（生产为 Cloudflare Pages
  * Function，本地为 Vite 中间件），绕开 github.com 的浏览器跨域限制。
  * 代理不可用或失败时返回 null，档案照常展示、仅省略热力图。
@@ -179,9 +147,8 @@ export async function fetchProfile(username: string): Promise<ProfileSnapshot> {
     ).then((r) => r.json())) as GitHubRepo[];
 
     // 用 API 返回的规范化 login 查询，避免大小写偏差
-    const [contrib, externalPush, contributions] = await Promise.all([
+    const [contrib, contributions] = await Promise.all([
       fetchContrib(user.login),
-      fetchExternalPushes(user.login),
       fetchContributions(user.login),
     ]);
 
@@ -189,7 +156,6 @@ export async function fetchProfile(username: string): Promise<ProfileSnapshot> {
       user,
       repos,
       contrib,
-      externalPush,
       contributions,
       fetchedAt: Date.now(),
     };

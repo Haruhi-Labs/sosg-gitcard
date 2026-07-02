@@ -2,7 +2,6 @@
 import { computeMetrics } from "../src/metrics";
 import { diagnose } from "../src/members";
 import { fetchAndParseContributions } from "../src/contrib";
-import { fetchExternalPushes } from "../src/github";
 import type { GitHubUser, GitHubRepo, ProfileSnapshot, ContribStats } from "../src/types";
 
 async function searchIssuesCount(q: string): Promise<number> {
@@ -27,8 +26,7 @@ async function load(username: string): Promise<ProfileSnapshot> {
     /* 搜索限流则 contrib=null */
   }
   const contributions = await fetchAndParseContributions(user.login).catch(() => null);
-  const externalPush = await fetchExternalPushes(user.login).catch(() => null);
-  return { user, repos, contrib, externalPush, contributions, fetchedAt: Date.now() };
+  return { user, repos, contrib, contributions, fetchedAt: Date.now() };
 }
 
 function line(name: string, snap: ProfileSnapshot) {
@@ -58,7 +56,7 @@ function synth(
     created_at: new Date().toISOString(), location: null, company: null, ...u,
   };
   return {
-    user, repos, contrib, externalPush: null,
+    user, repos, contrib,
     contributions: { total: contribTotal, days: [] }, fetchedAt: Date.now(),
   };
 }

@@ -32,20 +32,16 @@ export function computeMetrics(snap: ProfileSnapshot): Metrics {
   const contrib = snap.contrib;
   const prTotal = contrib?.totalPRs ?? null;
   const extMerged = contrib?.externalMergedPRs ?? null;
-  const extPushes = snap.externalPush?.pushes ?? 0;
 
   // 行動力：原创仓库产出（60 个封顶）
   const act = scale(original.length, 60);
 
-  // 協調力：真实社区贡献。三路并列——合并进他人仓库的 PR、直推他人仓库的
-  // 推送、以及关注/fork。这样「自己仓库不多却活跃投入开源」、以及「有写权限
-  // 直接 push 进他人项目」的开发者都能被正确识别；无 PR/推送数据时退回旧口径。
-  const hasContrib = prTotal !== null || extMerged !== null || extPushes > 0;
-  const sync = hasContrib
-    ? scale(
-        (extMerged ?? 0) * 5 + (prTotal ?? 0) + extPushes * 4 + user.following * 0.5 + forked.length * 2,
-        450,
-      )
+  // 協調力：真实社区贡献——合并进他人仓库的 PR、发起的 PR、关注与 fork。
+  // 这样「自己仓库不多、却活跃投入开源」的开发者也能被正确识别；
+  // 拿不到 PR 数据时退回到「关注 + fork」的旧口径。
+  const hasPR = prTotal !== null || extMerged !== null;
+  const sync = hasPR
+    ? scale((extMerged ?? 0) * 5 + (prTotal ?? 0) + user.following * 0.5 + forked.length * 2, 450)
     : scale(user.following + forked.length * 4, 150);
 
   // 熱量：近一年贡献总量（2800 封顶）。拿不到贡献数据时用原创仓库数做粗略兜底。

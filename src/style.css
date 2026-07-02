@@ -819,8 +819,8 @@ a {
 
 .contrib-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
   margin: 6px 0 12px;
 }
 
@@ -829,7 +829,7 @@ a {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 11px 12px;
+  padding: 12px 14px;
   border: 2px solid var(--ink);
   background: var(--card);
 }
@@ -842,7 +842,7 @@ a {
 
 .contrib-num {
   font-family: var(--f-display);
-  font-size: 29px;
+  font-size: 34px;
   line-height: 0.9;
   letter-spacing: 0.01em;
   color: var(--ink);
@@ -851,7 +851,7 @@ a {
 .contrib-label {
   font-family: var(--f-jp);
   font-weight: 700;
-  font-size: 11.5px;
+  font-size: 12px;
 }
 
 .contrib-label i {

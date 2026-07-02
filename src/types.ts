@@ -40,26 +40,12 @@ export interface ContribStats {
   externalMergedPRs: number | null;
 }
 
-/**
- * 直推他人仓库统计（取自 Events API）。
- * 捕捉「有写权限、直接 push 进他人仓库、不走 PR」的贡献——这类是 PR 统计漏掉的。
- * 局限：只覆盖近期（约 90 天 / 最近 100 条事件），且是推送次数而非精确提交数。
- */
-export interface ExternalPushStats {
-  /** 近期向他人仓库的直接推送次数 */
-  pushes: number;
-  /** 近期直推的他人仓库数（去重） */
-  repos: number;
-}
-
 /** 一次完整拉取的原始快照（会被缓存到 localStorage） */
 export interface ProfileSnapshot {
   user: GitHubUser;
   repos: GitHubRepo[];
   /** 协作贡献统计；搜索接口限流/失败时为 null，档案照常展示 */
   contrib: ContribStats | null;
-  /** 近期直推他人仓库统计（Events API）；失败时为 null */
-  externalPush: ExternalPushStats | null;
   /** 近一年贡献日历（经自建代理取自 github.com）；代理失败时为 null */
   contributions: Contributions | null;
   /** 抓取时刻的时间戳（ms），用于缓存过期判断 */
