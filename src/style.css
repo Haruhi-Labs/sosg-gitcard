@@ -129,6 +129,46 @@ a {
   color: var(--ink-soft);
 }
 
+.landing-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 14px;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.landing-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.landing-link:hover {
+  color: var(--sos-red);
+  border-bottom-color: currentColor;
+}
+
+.landing-link:focus-visible {
+  outline: 2px solid var(--sos-red);
+  outline-offset: 3px;
+}
+
+.landing-link .gh-mark {
+  flex-shrink: 0;
+}
+
+.landing-dot {
+  color: var(--line);
+}
+
 /* ─────────────── 检索框 ─────────────── */
 
 .search {
