@@ -35,6 +35,10 @@ html,
 body {
   margin: 0;
   padding: 0;
+  /* 关闭移动端字体自动放大——档案卡是定宽 560px 靠 zoom 整体缩放的，
+     font-boosting 会额外把文字撑大、破坏与布局的比例 */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -397,7 +401,8 @@ a {
   margin: 8px 0 4px;
   font-family: var(--f-jp);
   font-weight: 900;
-  font-size: clamp(24px, 6vw, 34px);
+  /* 定宽卡内固定字号，随整卡 zoom 等比缩放；不用 vw（vw 不随 zoom，会破坏比例） */
+  font-size: 34px;
   line-height: 1.05;
   letter-spacing: 0.02em;
 }
