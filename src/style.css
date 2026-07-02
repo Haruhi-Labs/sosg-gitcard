@@ -370,10 +370,12 @@ a {
 .idrow {
   position: relative;
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-template-areas: "portrait diag stamp";
+  grid-template-columns: auto 1fr;
+  grid-template-areas: "portrait diag";
   gap: 18px;
-  padding: 22px 20px 6px;
+  /* 右侧 116px 预留印章位：印章改为绝对定位、脱离网格流，
+     其字号（哪怕被撑大）不再参与列宽计算、不会挤压/换行其它内容 */
+  padding: 22px 116px 6px 20px;
 }
 
 .portrait {
@@ -490,9 +492,10 @@ a {
 
 /* 认定印：签名式盖章动画 */
 .stamp {
-  grid-area: stamp;
-  align-self: start;
-  justify-self: end;
+  /* 绝对定位，脱离 .idrow 网格流；.idrow 为 position:relative 提供定位上下文 */
+  position: absolute;
+  top: 22px;
+  right: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -514,6 +517,8 @@ a {
   font-size: 26px;
   letter-spacing: 0.06em;
   line-height: 1;
+  /* 防换行：即便字号被放大也保持「認定」单行 */
+  white-space: nowrap;
 }
 
 .stamp-sub {
@@ -521,6 +526,7 @@ a {
   font-size: 8px;
   letter-spacing: 0.14em;
   margin-top: 2px;
+  white-space: nowrap;
 }
 
 /* 姓名行 */
